@@ -1,73 +1,66 @@
 import requests
-from bs4 import BeautifulSoup
-import urllib.parse
+import re
 
 def download_playlist():
-    base_url = "https://plsemar.pages.dev"
     output_filename = "plsemarasli.m3u"
+    
+    # Target URL alternatif yang memuat data asli berdasarkan struktur auth semar
+    target_urls = [
+        "https://auth.semar.my.id/playlist.m3u",
+        "https://auth.semar.my.id/list.m3u",
+        "https://plsemar.pages.dev/playlist.m3u",
+        "https://plsemar.pages.dev"
+    ]
     
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
         "Referer": "https://plsemar.pages.dev/"
     }
 
-    print(f"Mengakses {base_url}...")
-    try:
-        response = requests.get(base_url, headers=headers, timeout=30)
-        if response.status_code != 200:
-            print(f"Gagal mengakses halaman, status: {response.status_code}")
-            return
+    best_content = None
 
-        html_content = response.text
-        soup = BeautifulSoup(html_content, 'html.parser')
-        
-        # Kumpulkan semua link yang berakhiran atau mengandung .m3u / .m3u8
-        potential_links = []
-        
-        # 1. Cari dari tag <a> atau tag sumber lain
-        for tag in soup.find_all(['a', 'source', 'iframe'], href=True):
-            href = tag.get('href') or tag.get('src')
-            if href and ('.m3u' in href or '.m3u8' in href):
-                full_url = urllib.parse.urljoin(base_url, href)
-                potential_links.append(full_url)
+    for url in target_urls:
+        print(f"Mencoba mengakses: {url}")
+        try:
+            response = requests.get(url, headers=headers, timeout=20)
+            if response.status_code == 200:
+                content = response.text
+                # Cek apakah isinya benar-benar playlist M3U (memiliki tag channel)
+                if "#EXTM3U" in content and ("group-title" in content or "tvg-id" in content or len(content.splitlines()) > 10):
+                    best_content = content
+                    print(f"[SUKSES] Berhasil mendapatkan playlist valid dari {url}")
+                    break
+        except Exception as e:
+            print(f"Gagal pada {url}: {e}")
 
-        # 2. Cari juga menggunakan teks/skrip di dalam halaman
-        import re
-        text_urls = re.findall(r'https?://[^\s<>"\']+\.m3u8?[^\s<>"\']*', html_content)
-        for u in text_urls:
-            if u not in potential_links:
-                potential_links.append(u)
-
-        print(f"Ditemukan {len(potential_links)} kandidat link playlist.")
-
-        # Cek dan download link yang merupakan master playlist (bukan segmen kecil .ts)
-        best_content = None
-        for link in potential_links:
-            print(f"Memeriksa link: {link}")
-            try:
-                res = requests.get(link, headers=headers, timeout=15)
-                if res.status_code == 200:
-                    content = res.text
-                    # Pastikan ini playlist channel (biasanya ada banyak baris #EXTINF atau group-title)
-                    if "#EXTM3U" in content and ("group-title" in content or len(content.splitlines()) > 20):
-                        best_content = content
-                        print(f"[ketemu] Master playlist valid ditemukan dari: {link}")
+    # Jika melalui direct URL belum ketemu, coba ekstrak dari file auth.js jika ada
+    if not best_content:
+        try:
+            print("Mencoba mengambil data dari skrip auth...")
+            js_resp = requests.get("https://auth.semar.my.id/auth.js", headers=headers, timeout=20)
+            if js_resp.status_code == 200:
+                # Cari link m3u di dalam file javascript
+                found_links = re.findall(r'https?://[^\s<>"\']+\.m3u8?[^\s<>"\']*', js_resp.text)
+                for link in found_links:
+                    print(f"Mendownload dari link di auth.js: {link}")
+                    r = requests.get(link, headers=headers, timeout=20)
+                    if r.status_code == 200 and "#EXTM3U" in r.text:
+                        best_content = r.text
                         break
-            except:
-                continue
+        except Exception as e:
+            print(f"Error pada auth.js: {e}")
 
-        # Jika ketemu master playlist, simpan
-        if best_content:
-            with open(output_filename, "w", encoding="utf-8") as f:
-                f.write(best_content)
-            print(f"[SUKSES] Berhasil menyimpan master playlist ke '{output_filename}'")
-        else:
-            print("[PERINGATAN] Tidak ditemukan master playlist multi-channel. Menyimpan halaman utama...")
-            with open(output_filename, "w", encoding="utf-8") as f:
-                f.write(html_content)
-
-    except Exception as e:
-        print(f"[ERROR] Terjadi kesalahan: {e}")
+    # Simpan hasil akhir
+    if best_content:
+        with open(output_filename, "w", encoding="utf-8") as f:
+            f.write(best_content)
+        print(f"[SELESAI] File playlist berhasil disimpan ke {output_filename}")
+    else:
+        print("[GAGAL] Belum berhasil menemukan playlist channel. Menyimpan halaman utama...")
+        # Fallback terakhir ambil dari pages.dev
+        r = requests.get("https://plsemar.pages.dev", headers=headers)
+        with open(output_filename, "w", encoding="utf-8") as f:
+            f.write(r.text)
 
 if __name__ == "__main__":
     download_playlist()
