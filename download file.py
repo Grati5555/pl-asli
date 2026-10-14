@@ -1,8 +1,8 @@
 import requests
-from bs4 import BeautifulSoup
+import re
 
 def download_playlist():
-    url = "https://plsemar.pages.dev"
+    base_url = "https://plsemar.pages.dev"
     output_filename = "plsemarasli.m3u"
     
     headers = {
@@ -10,35 +10,57 @@ def download_playlist():
         "Referer": "https://plsemar.pages.dev/"
     }
 
-    print(f"Mengambil data dari {url}...")
+    print(f"Mengakses {base_url}...")
     try:
-        response = requests.get(url, headers=headers, timeout=30)
+        response = requests.get(base_url, headers=headers, timeout=30)
         if response.status_code == 200:
             html_content = response.text
             
-            # Gunakan BeautifulSoup untuk mengambil teks bersih di dalam body atau seluruh dokumen
-            soup = BeautifulSoup(html_content, 'html.parser')
+            # Cari apakah ada URL file .m3u atau link API tersembunyi di dalam skrip JS HTML
+            # Contohnya mencocokkan pola URL di dalam file javascript
+            found_urls = re.findall(r'https?://[^\s<>"\']+\.m3u[^\s<>"\']*', html_content)
             
-            # Cari apakah teks #EXTM3U ada di dalam dokumen
-            raw_text = soup.get_text()
-            
-            # Jika teks M3U ditemukan di dalamnya, potong dan ambil mulai dari #EXTM3U
-            if "#EXTM3U" in raw_text:
-                start_idx = raw_text.find("#EXTM3U")
-                playlist_content = raw_text[start_idx:]
+            if found_urls:
+                target_m3u = found_urls[0]
+                print(f"Menemukan link sumber M3U: {target_m3u}")
+                res_m3u = requests.get(target_m3u, headers=headers, timeout=30)
+                if res_m3u.status_code == 200:
+                    with open(output_filename, "w", encoding="utf-8") as f:
+                        f.write(res_m3u.text)
+                    print("[SUKSES] Playlist M3U asli berhasil didownload!")
+                    return
+
+            # Jika tidak ada link langsung, coba cari script auth.js atau file pendukung lainnya
+            script_urls = re.findall(r'src=["\']([^"\']+\.js[^"\']*)["\']', html_content)
+            for js_url in script_urls:
+                if not js_url.startswith('http'):
+                    js_url = base_url.rstrip('/') + '/' + js_url.lstrip('/')
                 
-                # Simpan murni sebagai format M3U
+                print(f"Memeriksa file skrip: {js_url}")
+                js_resp = requests.get(js_url, headers=headers, timeout=15)
+                if js_resp.status_code == 200:
+                    # Cari apakah ada link m3u di dalam file Javascript tersebut
+                    js_m3u = re.findall(r'https?://[^\s<>"\']+\.m3u[^\s<>"\']*', js_resp.text)
+                    if js_m3u:
+                        real_url = js_m3u[0]
+                        print(f"Menemukan link di dalam JS: {real_url}")
+                        final_res = requests.get(real_url, headers=headers, timeout=30)
+                        if final_res.status_code == 200:
+                            with open(output_filename, "w", encoding="utf-8") as f:
+                                f.write(final_res.text)
+                            print("[SUKSES] Playlist berhasil diambil melalui skrip JS!")
+                            return
+
+            # Fallback terakhir: jika #EXTM3U terselip di suatu tempat
+            if "#EXTM3U" in html_content:
+                start_idx = html_content.find("#EXTM3U")
                 with open(output_filename, "w", encoding="utf-8") as f:
-                    f.write(playlist_content)
-                print("[SUKSES] Berhasil mengekstrak dan membersihkan file M3U!")
-            else:
-                # Fallback jika struktur berbeda, simpan apa adanya
-                with open(output_filename, "w", encoding="utf-8") as f:
-                    f.write(html_content)
-                print("[INFO] Menyimpan konten mentah.")
-        else:
-            print(f"Gagal mengakses server, status: {response.status_code}")
-            
+                    f.write(html_content[start_idx:])
+                print("[SUKSES] Berhasil memotong dan menyimpan M3U.")
+                return
+
+        print("[GAGAL] Tidak dapat menemukan sumber link playlist di halaman ini.")
+        
     except Exception as e:
         print(f"[ERROR] Terjadi kesalahan: {e}")
 
