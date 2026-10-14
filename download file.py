@@ -1,5 +1,6 @@
 import requests
-import re
+from bs4 import BeautifulSoup
+import urllib.parse
 
 def download_playlist():
     base_url = "https://plsemar.pages.dev"
@@ -13,54 +14,58 @@ def download_playlist():
     print(f"Mengakses {base_url}...")
     try:
         response = requests.get(base_url, headers=headers, timeout=30)
-        if response.status_code == 200:
-            html_content = response.text
-            
-            # Cari apakah ada URL file .m3u atau link API tersembunyi di dalam skrip JS HTML
-            # Contohnya mencocokkan pola URL di dalam file javascript
-            found_urls = re.findall(r'https?://[^\s<>"\']+\.m3u[^\s<>"\']*', html_content)
-            
-            if found_urls:
-                target_m3u = found_urls[0]
-                print(f"Menemukan link sumber M3U: {target_m3u}")
-                res_m3u = requests.get(target_m3u, headers=headers, timeout=30)
-                if res_m3u.status_code == 200:
-                    with open(output_filename, "w", encoding="utf-8") as f:
-                        f.write(res_m3u.text)
-                    print("[SUKSES] Playlist M3U asli berhasil didownload!")
-                    return
+        if response.status_code != 200:
+            print(f"Gagal mengakses halaman, status: {response.status_code}")
+            return
 
-            # Jika tidak ada link langsung, coba cari script auth.js atau file pendukung lainnya
-            script_urls = re.findall(r'src=["\']([^"\']+\.js[^"\']*)["\']', html_content)
-            for js_url in script_urls:
-                if not js_url.startswith('http'):
-                    js_url = base_url.rstrip('/') + '/' + js_url.lstrip('/')
-                
-                print(f"Memeriksa file skrip: {js_url}")
-                js_resp = requests.get(js_url, headers=headers, timeout=15)
-                if js_resp.status_code == 200:
-                    # Cari apakah ada link m3u di dalam file Javascript tersebut
-                    js_m3u = re.findall(r'https?://[^\s<>"\']+\.m3u[^\s<>"\']*', js_resp.text)
-                    if js_m3u:
-                        real_url = js_m3u[0]
-                        print(f"Menemukan link di dalam JS: {real_url}")
-                        final_res = requests.get(real_url, headers=headers, timeout=30)
-                        if final_res.status_code == 200:
-                            with open(output_filename, "w", encoding="utf-8") as f:
-                                f.write(final_res.text)
-                            print("[SUKSES] Playlist berhasil diambil melalui skrip JS!")
-                            return
-
-            # Fallback terakhir: jika #EXTM3U terselip di suatu tempat
-            if "#EXTM3U" in html_content:
-                start_idx = html_content.find("#EXTM3U")
-                with open(output_filename, "w", encoding="utf-8") as f:
-                    f.write(html_content[start_idx:])
-                print("[SUKSES] Berhasil memotong dan menyimpan M3U.")
-                return
-
-        print("[GAGAL] Tidak dapat menemukan sumber link playlist di halaman ini.")
+        html_content = response.text
+        soup = BeautifulSoup(html_content, 'html.parser')
         
+        # Kumpulkan semua link yang berakhiran atau mengandung .m3u / .m3u8
+        potential_links = []
+        
+        # 1. Cari dari tag <a> atau tag sumber lain
+        for tag in soup.find_all(['a', 'source', 'iframe'], href=True):
+            href = tag.get('href') or tag.get('src')
+            if href and ('.m3u' in href or '.m3u8' in href):
+                full_url = urllib.parse.urljoin(base_url, href)
+                potential_links.append(full_url)
+
+        # 2. Cari juga menggunakan teks/skrip di dalam halaman
+        import re
+        text_urls = re.findall(r'https?://[^\s<>"\']+\.m3u8?[^\s<>"\']*', html_content)
+        for u in text_urls:
+            if u not in potential_links:
+                potential_links.append(u)
+
+        print(f"Ditemukan {len(potential_links)} kandidat link playlist.")
+
+        # Cek dan download link yang merupakan master playlist (bukan segmen kecil .ts)
+        best_content = None
+        for link in potential_links:
+            print(f"Memeriksa link: {link}")
+            try:
+                res = requests.get(link, headers=headers, timeout=15)
+                if res.status_code == 200:
+                    content = res.text
+                    # Pastikan ini playlist channel (biasanya ada banyak baris #EXTINF atau group-title)
+                    if "#EXTM3U" in content and ("group-title" in content or len(content.splitlines()) > 20):
+                        best_content = content
+                        print(f"[ketemu] Master playlist valid ditemukan dari: {link}")
+                        break
+            except:
+                continue
+
+        # Jika ketemu master playlist, simpan
+        if best_content:
+            with open(output_filename, "w", encoding="utf-8") as f:
+                f.write(best_content)
+            print(f"[SUKSES] Berhasil menyimpan master playlist ke '{output_filename}'")
+        else:
+            print("[PERINGATAN] Tidak ditemukan master playlist multi-channel. Menyimpan halaman utama...")
+            with open(output_filename, "w", encoding="utf-8") as f:
+                f.write(html_content)
+
     except Exception as e:
         print(f"[ERROR] Terjadi kesalahan: {e}")
 
