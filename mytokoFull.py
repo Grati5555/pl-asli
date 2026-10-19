@@ -1,46 +1,30 @@
-import os
 import urllib.request
 
-def generate_playlist():
-    source_file = "mytoko2.txt"
-    playlist_file = "PLmytoko2.m3u"
-    
-    if not os.path.exists(source_file):
-        print("File mytoko2.txt tidak ditemukan.")
-        return
+# URL sumber playlist
+SOURCE_URL = "https://bestpl.my.id/rijal4921"
+OUTPUT_FILE = "PLmytoko2.m3u"
 
-    # Membaca link sumber dari mytoko2.txt
-    with open(source_file, "r", encoding="utf-8") as f:
-        links = [line.strip() for line in f if line.strip() and not line.startswith("#")]
-
-    if not links:
-        print("Tidak ada link di dalam mytoko2.txt.")
-        return
-
-    # Mengambil link pertama dari mytoko2.txt
-    target_url = links[0]
-
+def update_playlist():
+    print(f"Mengambil data dari: {SOURCE_URL}")
     try:
-        print(f"Mengambil data dari: {target_url}")
-        
-        # Mengatur User-Agent agar terbaca seperti browser/downloader
+        # Mengunduh konten dari sumber dengan User-Agent agar tidak diblokir
         req = urllib.request.Request(
-            target_url,
-            headers={'User-Agent': 'Mozilla/5.0'}
+            SOURCE_URL, 
+            headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
         )
         
-        # Mendownload isi file playlist asli dari link sumber
         with urllib.request.urlopen(req) as response:
             content = response.read().decode('utf-8')
-
-        # Menyimpan isi aslinya ke PLmytoko2.m3u
-        with open(playlist_file, "w", encoding="utf-8") as f:
+            
+        # Menyimpan ke file output
+        with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
             f.write(content)
-
-        print(f"Berhasil memperbarui {playlist_file} dengan isi file playlist asli!")
-
+            
+        print(f"Berhasil memperbarui {OUTPUT_FILE}")
+        
     except Exception as e:
-        print(f"Terjadi kesalahan saat mendownload: {e}")
+        print(f"Terjadi kesalahan saat memperbarui playlist: {e}")
+        exit(1)
 
 if __name__ == "__main__":
-    generate_playlist()
+    update_playlist()
