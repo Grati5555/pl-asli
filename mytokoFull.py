@@ -1,18 +1,21 @@
 import urllib.request
 import urllib.error
 
-# URL sumber playlist
+# Gunakan URL tujuan akhir atau endpoint API jika ada, 
+# atau tambahkan parameter/headers khusus agar server mengembalikan M3U
 SOURCE_URL = "https://bestpl.my.id/rijal4921"
 OUTPUT_FILE = "PLmytoko2.m3u"
 
 def update_playlist():
     print(f"Mengambil data dari: {SOURCE_URL}")
     try:
-        # Menggunakan headers yang menyerupai browser asli secara lengkap
+        # Menyamar sebagai browser modern dengan header lengkap
         headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
-            'Accept-Language': 'id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7'
+            'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36',
+            'Accept': 'text/plain, */*; q=0.01',
+            'Accept-Language': 'id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7',
+            'Referer': 'https://bestpl.my.id/',
+            'X-Requested-With': 'XMLHttpRequest'
         }
         
         req = urllib.request.Request(SOURCE_URL, headers=headers)
@@ -20,12 +23,12 @@ def update_playlist():
         with urllib.request.urlopen(req) as response:
             content = response.read().decode('utf-8')
             
-        # Validasi sederhana: pastikan isinya adalah M3U, bukan halaman HTML
+        # Jika ternyata masih terdeteksi HTML, coba cari tahu apakah ada link download langsung di dalamnya
         if "<html" in content.lower() or "<doctype" in content.lower():
-            print("Peringatan: Sumber mengembalikan halaman HTML, bukan playlist M3U.")
-            print("Kemungkinan link sumber memerlukan token khusus atau diblokir.")
+            print("Peringatan: Situs masih merespons dengan HTML.")
+            print("Kemungkinan besar halaman ini memerlukan eksekusi JavaScript.")
         
-        # Menyimpan ke file output
+        # Menyimpan konten ke file PLmytoko2.m3u
         with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
             f.write(content)
             
