@@ -13565,17 +13565,6 @@ https://b.webcache.maxindo.net.id/dhamma/dhamma.m3u8
 ========== BRI LIGA 1 ===========
 #EXTINF:-1 group-logo="https://upload.bestv.my.id/TSGDul2QBj",LIVE | LIGA TARKAM
 
-#EXTINF:-1 tvg-id="rbtv-4474581" tvg-name="[Liga 1 Indonesia] Persib Bandung vs Persatuan Sepak Bola Indonesia Kediri • 19:00 WIB [Server 1]" tvg-logo="https://logos1.tcpwe138stya.ru/aelogo/football/team/b2004093bf25a5a8d1768970d6e49d71.png!w80" group-title="LIVE | LIGA TARKAM",Persib vs Persatuan Sepak Bola Indonesia Kediri • 19:00 WIB
-#EXTVLCOPT:http-referrer=https://lola30es.mpipzni2naturally32kistomach.ru/
-#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36
-https://rbtv-resolver.xr3ed-edge.workers.dev/live/awiL9-C6dNODvis0uNN5TmCiXIWMv1JuidWMVoJw2XBDz3fOiQ.m3u8?s=0
-
-#EXTINF:-1 tvg-id="rbtv-4474572" tvg-name="[Liga 1 Indonesia] Persebaya Surabaya vs PSS Sleman • 15:30 WIB [Server 1]" tvg-logo="https://logos1.tcpwe138stya.ru/aelogo/football/team/66307444901ddb38c881129b7ea0105e.png!w80" group-title="LIVE | LIGA TARKAM",Persebaya vs PSS Sleman • 15:30 WIB
-#EXTVLCOPT:http-referrer=https://lola30es.mpipzni2naturally32kistomach.ru/
-#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36
-https://rbtv-resolver.xr3ed-edge.workers.dev/live/h2-0NbAAJjNWTZhMOlY9shDXLemQyyElG5K5zX2Hjwf5kkd9HA.m3u8?s=0
-
-
 #EXTINF:-1 data-source="Manual" group-title="LIVE | LIGA TARKAM" tvg-logo="https://cdns.klimg.com/bola.net/library/upload/24/2025/12/1280x720/bri-super-league-log_49d0e29.jpg" tvg-uid="2e61e12f5293186586b8adbe67ac315d",INDOSIAR
 #EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleCoreMedia/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36
 #KODIPROP:inputstream=inputstream.adaptive
@@ -16253,7 +16242,6 @@ http://amdlive.ctnd.com.edgesuite.net/arirang_1ch/smil:arirang_1ch.smil/playlist
 #EXTINF:-1 tvg-logo="https://raw.githubusercontent.com/Iqbalbala/CHANNEL/refs/heads/main/kbsworld.png" group-title="CHANNEL | FIRSTMEDIA",KBS WORLD
 #EXTVLCOPT:http-referrer=https://cinerama.uz/
 https://stream8.cinerama.uz/1448/playlist.m3u8
-#EXTINF:-1 tvg-id="KBSV231.usSD" tvg-logo="https://i.imgur.com/6lklsyN.png" group-title="United States;General;Religious",KBSV 23.1 (720p) [Not 24/7]
 http://66.242.170.53/hls/live/temp/index.m3u8
 
 EXTINF:-1 tvg-logo="https://raw.githubusercontent.com/Iqbalbala/CHANNEL/refs/heads/main/cb.png" group-title="CHANNEL | FIRSTMEDIA",CITRA BIOSKOP
@@ -18742,7 +18730,6 @@ https://d2tjypxxy769fn.cloudfront.net/out/v1/7a50d44c0a154dd29880c3728fb49a56/in
 #EXTINF:-1 tvg-id="KBSWorld.kr" tvg-url="https://bit.ly/RtmEpg" tvg-logo="https://i.imgur.com/7DqgELX.png" group-title="CHANNEL | KOREA",KBS WORLD
 #EXTVLCOPT:http-referrer=https://cinerama.uz/
 https://stream8.cinerama.uz/1448/playlist.m3u8
-#EXTINF:-1 tvg-id="KBSV231.usSD" tvg-logo="https://i.imgur.com/6lklsyN.png" group-title="United States;General;Religious",KBSV 23.1 (720p) [Not 24/7]
 http://66.242.170.53/hls/live/temp/index.m3u8
 
 #EXTINF:-1 group-title="CHANNEL | KOREA"  tvg-id="cjenm.kr" tvg-logo="https://static.wikia.nocookie.net/jhmovie/images/3/36/CJ_E%26M_logo.png",CJ E&M
