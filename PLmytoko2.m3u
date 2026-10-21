@@ -1186,12 +1186,7 @@ https://b.webcache.maxindo.net.id/dhamma/dhamma.m3u8
 #EXTINF:-1 group-logo="https://upload.bestv.my.id/TSGDul2QBj",LIVE | LIGA TARKAM
 
 #EXTINF:-1 data-source="Manual" group-title="LIVE | LIGA TARKAM" tvg-logo="https://cdns.klimg.com/bola.net/library/upload/24/2025/12/1280x720/bri-super-league-log_49d0e29.jpg" tvg-uid="2e61e12f5293186586b8adbe67ac315d",INDOSIAR
-#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleCoreMedia/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36
-#KODIPROP:inputstream=inputstream.adaptive
-#KODIPROP:inputstream.adaptive.manifest_type=mpd
-#KODIPROP:inputstream.adaptive.license_type=org.w3.clearkey
-#KODIPROP:inputstream.adaptive.license_key=https://sports.inisemar.my.id/ck.php?id=indosiar
-https://vidsemar.pages.dev/terraluna3/205.mpd
+http://goldenid.online:80/play/38ifGdTRCzSHegy1-Yigj_BhM5sA30rFRVJ6_obdVzMvwLIRezD1TyfNKEHjuqPJ
 
 #EXTINF:-1 data-source="Manual" group-title="LIVE | LIGA TARKAM" tvg-logo="https://cdns.klimg.com/bola.net/library/upload/24/2025/12/1280x720/bri-super-league-log_49d0e29.jpg" tvg-uid="ae8a0826b1a364c10a9ba37e1caf8460",INDOSIAR ALT
 http://goldenid.online:80/play/38ifGdTRCzSHegy1-Yigj3JPn4MUBmM1_VZHEOWgdWmxHXhsgKsiAMMiYYVXLHck
@@ -1209,7 +1204,7 @@ http://sansatplus.net:88/02000406070996/1899319467/694349
 https://bintangstreaming.my.id/connect/index.m3u8?channel=bri2&type=m3u8
 
 #EXTINF:-1 tvg-logo="https://cdns.klimg.com/bola.net/library/upload/24/2025/12/1280x720/bri-super-league-log_49d0e29.jpg" group-title="LIVE | LIGA TARKAM", BRI 3
-https://raw.githubusercontent.com/Cutsiffa/pl/refs/heads/main/Loc/beri1.m3u8
+https://live2.jorvakstreamcache.com/live/channel28.m3u8
 
 #EXTINF:-1 tvg-logo="https://cdns.klimg.com/bola.net/library/upload/24/2025/12/1280x720/bri-super-league-log_49d0e29.jpg" group-title="LIVE | LIGA TARKAM", BRI 4
 #EXTVLCOPT:http-user-agent=Mozilla/5.0 (iPhone14,6; U; CPU iPhone OS 15_4 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) Version/10.0 Mobile/19E241 Safari/602.1
@@ -3352,7 +3347,20 @@ https://raw.githubusercontent.com/tipikita/Lcm/refs/heads/main/Cn4.m3u8
 #EXTVLCOPT:http-origin=http://www.fawanews.sc/
 https://raw.githubusercontent.com/tipikita/Lcm/refs/heads/main/Cn5.m3u8
 
-
+#EXTINF:-1 group-title="LIVE | UCL" tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZiZkSj518i8Xb94IYNahh50lJAbBLleySnwkURNqtFw&s=10",02.00||REAL MADRID VS RB LEIPZIG
+https://live2.jorvakstreamcache.com/live/channel5.m3u8
+#EXTINF:-1 group-title="LIVE | UCL" tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZiZkSj518i8Xb94IYNahh50lJAbBLleySnwkURNqtFw&s=10",02.00||ASTON VILLA VS VIKING
+https://live2.jorvakstreamcache.com/live/channel6.m3u8
+#EXTINF:-1 group-title="LIVE | UCL" tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZiZkSj518i8Xb94IYNahh50lJAbBLleySnwkURNqtFw&s=10",02.00||CLUB BRUGGE VS RC LENS
+https://live2.jorvakstreamcache.com/live/channel19.m3u8
+#EXTINF:-1 group-title="LIVE | UCL" tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZiZkSj518i8Xb94IYNahh50lJAbBLleySnwkURNqtFw&s=10",02.00||BAYERN MUNCHEN VS ARSENAL
+https://live2.jorvakstreamcache.com/live/channel1.m3u8
+#EXTINF:-1 group-title="LIVE | UCL" tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZiZkSj518i8Xb94IYNahh50lJAbBLleySnwkURNqtFw&s=10",02.00||REAL BETIS VS FENEYOORD
+https://live2.jorvakstreamcache.com/live/channel17.m3u8
+#EXTINF:-1 group-title="LIVE | UCL" tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZiZkSj518i8Xb94IYNahh50lJAbBLleySnwkURNqtFw&s=10",02.00||SPORTING CP VS LASK LINZ
+https://live2.jorvakstreamcache.com/live/channel18.m3u8
+#EXTINF:-1 group-title="LIVE | UCL" tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZiZkSj518i8Xb94IYNahh50lJAbBLleySnwkURNqtFw&s=10",02.00||INTER MILAN VS SHAKTAR
+https://live2.jorvakstreamcache.com/live/channel11.m3u8
 
 
 
