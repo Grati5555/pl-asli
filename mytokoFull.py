@@ -7,33 +7,43 @@ OUTPUT_FILE = "PLmytoko2.m3u"
 def update_playlist():
     print(f"Mengambil data dari: {SOURCE_URL}")
     try:
-        # Menyamar sebagai browser desktop agar tidak diblokir oleh server sumber
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
-            'Accept-Language': 'id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7',
-            'Cache-Control': 'no-cache',
-            'Pragma': 'no-cache'
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
         }
         
         req = urllib.request.Request(SOURCE_URL, headers=headers)
         
         with urllib.request.urlopen(req) as response:
-            content = response.read().decode('utf-8')
+            raw_content = response.read().decode('utf-8', errors='ignore')
             
-        # Periksa apakah konten yang diambil berisi format M3U
-        if "#EXTM3U" not in content:
-            print("Peringatan: Konten yang diunduh tidak memiliki format #EXTM3U.")
+        # Proses pembersihan: Hanya ambil baris yang benar-benar bagian dari M3U
+        cleaned_lines = []
+        capture = False
         
-        # Menyimpan hasil ke file PLmytoko2.m3u
+        for line in raw_content.splitlines():
+            stripped = line.strip()
+            
+            # Mulai merekam ketika menemukan tag awal m3u atau tag info channel
+            if stripped.startswith("#EXTM3U") or stripped.startswith("#EXTINF") or stripped.startswith("#EXTVLCOPT") or stripped.startswith("#KODIPROP"):
+                capture = True
+                
+            if capture:
+                cleaned_lines.append(line)
+                
+        # Jika file sama sekali tidak terdeteksi tag m3u, ambil semua teks mentahnya sebagai fallback
+        if not cleaned_lines:
+            cleaned_lines = raw_content.splitlines()
+
+        # Gabungkan kembali baris yang sudah bersih
+        final_content = "\n".joi(cleaned_lines) if 'joi' not in locals() else "\n".join(cleaned_lines)
+        
+        # Simpan ke file output
         with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
-            f.write(content)
+            f.write(final_content)
             
-        print(f"Berhasil memperbarui {OUTPUT_FILE} dengan sempurna!")
+        print(f"Berhasil membersihkan dan memperbarui {OUTPUT_FILE}")
         
-    except urllib.error.HTTPError as e:
-        print(f"Gagal HTTP: {e.code} - {e.reason}")
-        exit(1)
     except Exception as e:
         print(f"Terjadi kesalahan: {e}")
         exit(1)
