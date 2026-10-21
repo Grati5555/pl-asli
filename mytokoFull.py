@@ -31,12 +31,12 @@ def update_playlist():
             if capture:
                 cleaned_lines.append(line)
                 
-        # Jika file sama sekali tidak terdeteksi tag m3u, ambil semua teks mentahnya sebagai fallback
+        # Jika tidak ada tag yang cocok, fallback ambil semua baris
         if not cleaned_lines:
             cleaned_lines = raw_content.splitlines()
 
-        # Gabungkan kembali baris yang sudah bersih
-        final_content = "\n".joi(cleaned_lines) if 'joi' not in locals() else "\n".join(cleaned_lines)
+        # Gabungkan kembali baris yang sudah bersih dengan benar
+        final_content = "\n".join(cleaned_lines)
         
         # Simpan ke file output
         with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
