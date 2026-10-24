@@ -546,8 +546,8 @@ https://d84q7nw4qf3j3.cloudfront.net/out/v1/8983f9a68f0d4f169a77f3ce20ab2685/ind
 
 
 
-
-
+#EXTINF:-1 tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS67iGRe1SflLs3g_Fc9KyJgytv8QizJNb_P_TX4HEGMw&s=10" group-title="BRI LIGA 1 & LIGA 2 PEGADAIAN",LANCARTV FEED
+https://raw.githubusercontent.com/vannyruru-ui/KokoUyo06/refs/heads/main/Liga1bri.m3u8
 #EXTINF:-1 tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS67iGRe1SflLs3g_Fc9KyJgytv8QizJNb_P_TX4HEGMw&s=10" group-title="BRI LIGA 1 & LIGA 2 PEGADAIAN",BRI VIDIO FEED 1
 #EXTVLCOPT:http-origin=https://player.787200.com/
 #EXTVLCOPT:http-referrer=https://player.787200.com/
